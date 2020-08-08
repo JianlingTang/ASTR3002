@@ -1,0 +1,46 @@
+## Caluclator for ASTR3002 Assignment 1 
+import numpy as np
+import astropy.units as u
+import astropy.constants as c
+#Question 1 
+D_s = 1.496e8*u.km
+D_m = 385000*u.km
+alpha = np.arccos(D_m/D_s).to(u.deg)
+print('the value of the angle equals',alpha)
+factor = D_m/np.cos(87*u.deg)/D_s
+1/factor
+from astropy.cosmology import WMAP9 as cosmo
+v_rec = cosmo.H(0)*778*u.kpc
+v_rec.to(u.km*u.s**-1)
+v_an = 110*u.km*u.s**-1
+t_col = 778*u.kpc/v_an
+t_col.to(u.yr)
+#Question 3
+#Caluclate v_0
+v_0 = (c.G)**0.5*(1e8*u.M_sun)**0.5*(10*u.Mpc*10*u.mas)**(-0.5)*u.rad**0.5
+v_0.to(u.km*u.s**-1)
+#Calculate a_0
+a_0 = (c.G)*(1e8*u.M_sun)*(10*u.Mpc*10*u.mas)**(-2)*u.rad**2
+a_0.to(u.km*u.s**-1*u.yr**-1)
+#Plotting for Q3 
+import matplotlib.pyplot as plt
+
+theta_dat_0 = [5,6,7]
+theta_dat = [i**(-0.5) for i in theta_dat_0]
+v_rot_dat = [965,880,815]
+plt.plot(theta_dat,v_rot_dat, 'yo',label='data')
+coef = np.polyfit(theta_dat,v_rot_dat,1)
+poly1d_fn = np.poly1d(coef) 
+theta_0 = np.arange(0.3,0.5,0.01)
+v_rot_0 = coef[1]+coef[0]*theta_0
+plt.plot(theta_0,v_rot_0,'r',label='Linear fit')
+plt.title(r'$\theta_1$ versus rotation velocities for three orbiting objects')
+plt.xlabel(r'$\theta_1$')
+plt.ylabel(r'$v_{rot}$')
+plt.plot(3.9**(-0.5),coef[1]+coef[0]*(3.9**(-0.5)),'bo',label='new data point')
+plt.legend()
+print(coef)
+new_v_rot = coef[1]+coef[0]*(3.9**(-0.50))
+
+print('rotational velocity in km/s',new_v_rot)
+#Find the rotatianal velocity at theta = 3.9mas in km/s
